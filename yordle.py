@@ -1,10 +1,10 @@
 import random
 import time
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 from pyshadow.main import Shadow
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 # Setting up geckowebdriver and loading webpage
 driver = webdriver.Firefox()  # change to webdriver.Chrome() to use with chrome
@@ -18,11 +18,11 @@ close_button = shadow.find_element(".close-icon")
 close_button.click()
 
 f = open("wordlists/words_fetched.txt")
-word_list = f.readlines()  # Note that every word ends with \n
+word_list = f.readlines()  # Note that every word ends with \n, it is later stripped in get_dict()
 f.close()
 
 
-# Submit desired word to the wordle website
+# Submit desired @word to the wordle website
 #
 def enter_word(word):
     for l in word:
@@ -31,7 +31,6 @@ def enter_word(word):
 
 
 # Returns list of words that match @size
-# TODO strip \n from all words
 #
 def get_dict(size):
     glist = []
@@ -42,6 +41,11 @@ def get_dict(size):
 
 
 class Grid:
+    # @size is the size of the word, not needed if @word is not empty
+    # @tries is the limit of tries before losing the game
+    # @word is only useful when trying to make the program guess a word you want
+    # @web defines if you want to query information from the webapp or play the game standalone
+    #TODO do not load selenium when web == 0
     def __init__(self, size=5, tries=6, word='', web=1):
         self.size = size
         if web == 1:
@@ -129,7 +133,7 @@ class Grid:
 
     # * Find a word that complies with known data at current stage of the game
     #  Then test this word through one of the above methods
-    #
+    #TODO use new_input() if web == 0
     def solve_step(self):
         good1, good2, good3 = False, False, False
         while not(good1 and good2 and good3):
