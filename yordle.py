@@ -20,7 +20,7 @@ def enter_word(word):
         keyboard.find_element(By.CSS_SELECTOR, "[data-key='"+l+"']").click()
     keyboard.find_element(By.CSS_SELECTOR, "[data-key='↵']").click()
 
-f = open("official_wordle.txt")
+f = open("wordlists/words_fetched.txt")
 word_list = f.readlines()
 
 def get_word_from_dict(size):
@@ -41,8 +41,8 @@ class Grid:
             self.size = len(word)
             self.glist = get_word_from_dict(self.size)[1]
             self.word = word
-        self.green = []
-        self.yellow = []
+        (self.green, self.green_index) = ([],[])
+        (self.yellow, self.yellow_index) = ([],[])
         self.black = []
         self.inputs = []
         self.try_nb = 0
@@ -64,11 +64,14 @@ class Grid:
             char = input[i]
             if char in self.word:
                 if char == self.word[i]:
-                    self.green.append((char,i))
+                    self.green.append(char)
+                    self.green_index.append(i)
                 else:
-                    self.yellow.append((char,i))
+                    self.yellow.append(char)
+                    self.yellow_index.append(i)
             else:
-                self.black.append(char)
+                if not(char in self.green):
+                    self.black.append(char)
         
         #print("g:",self.green,"\ny:",self.yellow,"\nb:",self.black)
 
@@ -80,23 +83,28 @@ class Grid:
         self.try_nb += 1
         nb_correct = 0
         #DONE: retrieve color data from current row from DOM and parse
+        
         for i in range(0,self.size):
             tile = shadow.find_element(By.CSS_SELECTOR,"game-row:nth-child("+str(self.try_nb)+") > .row > game-tile:nth-child("+str(i+1)+") > .tile")
             color = tile.get_attribute("data-state")
             char = input[i]
+
             if color == "correct":
-                self.green.append((char,i))
+                self.green.append(char)
+                self.green_index.append(i)
                 nb_correct += 1
             if color == "present":
-                self.yellow.append((char,i))
-            if color == "absent":
+                self.yellow.append(char)
+                self.yellow_index.append(i)
+            if color == "absent" and not(char in self.green) and not(char in self.yellow):
                 self.black.append(char)
+
             print(tile.get_attribute("data-state"))
+
         #if all correct stop
         if nb_correct == self.size:
             print("FOUND! Word was: "+input)
             return 1
-        #if nbtry too high stop//DONE
 
     def solve_step(self):
         good1, good2, good3 = 0,0,0
@@ -106,20 +114,24 @@ class Grid:
             word = self.glist[random.randrange(0, len(self.glist))]
             word = word[:len(word) - 1]
 
-            for (char,i) in self.green:
+            for j in range(0,len(self.green)):
+                (char, i) = (self.green[j],self.green_index[j])
                 if word[i] != char:
                     good1 = 0
-            
-            for (char,i) in self.yellow:
-                if not(char in word):
+                    break
+
+            for j in range(0,len(self.yellow)):
+                (char, i) = (self.yellow[j],self.yellow_index[j])
+                if not(char in word) or word[i] == char:
                     good2 = 0
-                if word[i] == char:
-                    good2 = 0
+                    break
             
             for char in self.black:
                 if char in word:
                     good3 = 0
+                    break
         print(word)
+
         #return self.new_input(word)
         return self.web_input(word)
 

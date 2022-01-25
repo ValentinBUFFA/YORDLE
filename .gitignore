@@ -3,3 +3,7 @@
 /geckodriver.log
 /wdtest.py
 /words_alpha.txt
+wordlists/words_alpha.txt
+wordlists/official_wordle.txt
+.gitignore
+wordlists/corncob_lowercase.txt
