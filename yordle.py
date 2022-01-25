@@ -15,39 +15,47 @@ close_button = shadow.find_element(".close-icon")
 close_button.click()
 keyboard = shadow.find_element("#keyboard")
 
-def enter_word(word):
+f = open("wordlists/words_fetched.txt")
+word_list = f.readlines()
+f.close()
+
+#submit desired word to the wordle website
+def enter_word(word): 
     for l in word:
         keyboard.find_element(By.CSS_SELECTOR, "[data-key='"+l+"']").click()
     keyboard.find_element(By.CSS_SELECTOR, "[data-key='↵']").click()
 
-f = open("wordlists/words_fetched.txt")
-word_list = f.readlines()
-
-def get_word_from_dict(size):
+#return subdict with matching length words
+def get_dict(size): 
     glist = []
     for word in word_list:
         if len(word)-1 == size:
             glist.append(word)
-    i = random.randrange(0, len(glist))
-    return glist[i][:len(glist[i])-1], glist
+    return glist
 
 
 class Grid:
     def __init__(self,size = 5,tries = 6,word ='',web = 1):
         self.size = size
-        if word == '':
-            self.word, self.glist = get_word_from_dict(size)
-        else:
-            self.size = len(word)
-            self.glist = get_word_from_dict(self.size)[1]
-            self.word = word
+        if web == 1:
+            self.word = ''
+            self.glist = get_dict(size)
+        else: #if in standalone mode take into account word parameter
+            if word == '': #if word is not specified get a random one with the right size
+                self.glist = get_word_from_dict(size)
+                self.word = self.glist[i][:len(glist[i])-1]
+            else: #else use the specified word
+                self.size = len(word)
+                self.glist = get_dict(self.size)
+                self.word = word
+        
         (self.green, self.green_index) = ([],[])
         (self.yellow, self.yellow_index) = ([],[])
         self.black = []
         self.inputs = []
         self.try_nb = 0
     
-    def new_input(self, input:str):
+    def new_input(self, input:str): #only for standalone mode, useless when playing on website
         if len(input) != self.size:
             print("Wrong size!")
             return -1
@@ -73,17 +81,17 @@ class Grid:
                 if not(char in self.green):
                     self.black.append(char)
         
-        #print("g:",self.green,"\ny:",self.yellow,"\nb:",self.black)
-
     def web_input(self, input: str):
-        #submit input to the site and add a delay, word whould already be the right size
+        #submit input to the site and add a delay
         enter_word(input)
         time.sleep(3)
+        
+        #update program data
         self.inputs.append(input)
         self.try_nb += 1
         nb_correct = 0
-        #DONE: retrieve color data from current row from DOM and parse
-        
+
+        #retrieve color data from current row from DOM and parse
         for i in range(0,self.size):
             tile = shadow.find_element(By.CSS_SELECTOR,"game-row:nth-child("+str(self.try_nb)+") > .row > game-tile:nth-child("+str(i+1)+") > .tile")
             color = tile.get_attribute("data-state")
@@ -132,7 +140,7 @@ class Grid:
                     break
         print(word)
 
-        #return self.new_input(word)
+        #return self.new_input(word) //use for standalone mode
         return self.web_input(word)
 
 grid = Grid()
