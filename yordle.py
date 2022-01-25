@@ -102,7 +102,7 @@ class Grid:
     def web_input(self, input: str):
         # Submit input to the site and add a delay
         enter_word(input)
-        time.sleep(2) #! 2 seconds should work, if not change for an higher value
+        time.sleep(2) #! 2 seconds should work, if not: change for an higher value
 
         # Update program data
         self.inputs.append(input)
