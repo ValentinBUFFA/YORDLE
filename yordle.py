@@ -139,8 +139,11 @@ class Grid:
         good1, good2, good3 = False, False, False
         while not(good1 and good2 and good3):
             good1, good2, good3 = True, True, True
-
-            word = self.glist[random.randrange(0, len(self.glist))]
+            
+            if self.try_nb == 0 and self.size == 5:
+                word = "orate"
+            else:
+                word = self.glist[random.randrange(0, len(self.glist))]
 
             for j in range(0, len(self.green)):
                 (char, i) = (self.green[j], self.green_index[j])
