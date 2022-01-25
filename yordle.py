@@ -40,6 +40,7 @@ def get_dict(size):
     return glist
 
 
+# ? IS web=0 OPTION STILL USEFUL?
 class Grid:
     # @size is the size of the word, not needed if @word is not empty
     # @tries is the limit of tries before losing the game
