@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 # Setting up geckowebdriver and loading webpage
-driver = webdriver.Firefox()  # change to webdriver.Chrome() to use with chrome
+driver = webdriver.Firefox()  # change to webdriver.Chrome() to use with chrome/chromium
 shadow = Shadow(driver)
 driver.get("https://www.powerlanguage.co.uk/wordle/")
 time.sleep(1)
@@ -23,7 +23,7 @@ f.close()
 
 
 # Submit desired @word to the wordle website
-#
+#TODO try alternative method using sendkeys() (might not work)
 def enter_word(word):
     for l in word:
         keyboard.find_element(By.CSS_SELECTOR, "[data-key='"+l+"']").click()
@@ -40,7 +40,7 @@ def get_dict(size):
     return glist
 
 
-# ? IS web=0 OPTION STILL USEFUL?
+# ? IS web OPTION STILL USEFUL
 class Grid:
     # @size is the size of the word, not needed if @word is not empty
     # @tries is the limit of tries before losing the game
