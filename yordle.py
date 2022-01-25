@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from pyshadow.main import Shadow
 
 #Setting up geckowebdriver and loading webpage
-driver = webdriver.Firefox()
+driver = webdriver.Firefox() #change to webdriver.Chrome() to use with chrome
 shadow = Shadow(driver)
 driver.get("https://www.powerlanguage.co.uk/wordle/")
 time.sleep(1)
@@ -106,8 +106,6 @@ class Grid:
                 self.yellow_index.append(i)
             if color == "absent" and not(char in self.green) and not(char in self.yellow):
                 self.black.append(char)
-
-            print(tile.get_attribute("data-state"))
 
         #if all correct stop
         if nb_correct == self.size:
