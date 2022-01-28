@@ -54,7 +54,7 @@ class Grid:
             self.glist = get_dict(size)
         else:                                               # if in standalone mode take into account @word parameter
             if word == '':                                  # if @word is not specified get a random one with the right size
-                self.glist = get_word_from_dict(size)
+                self.glist = get_dict(size)
                 self.word = self.glist[random.randrange(0, len(self.glist))]
             else:                                           # else use the specified word
                 self.size = len(word)
@@ -74,7 +74,7 @@ class Grid:
         if len(input) != self.size:
             print("Wrong size!")
             return -1
-        if not((input+'\n') in self.glist):
+        if not((input) in self.glist):
             print("Word doesn't exist")
             return -1
         if input == self.word:
