@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+
 # Setting up geckowebdriver and loading webpage
 driver = webdriver.Firefox()  # change to webdriver.Chrome() to use with chrome/chromium
 shadow = Shadow(driver)
