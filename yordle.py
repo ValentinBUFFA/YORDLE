@@ -62,7 +62,7 @@ class Grid:
                 self.glist = get_dict(self.size)
                 self.word = word
 
-        self.green, self.green_index = [], []
+        self.green = ['']*size
         self.yellow, self.yellow_index = [], []
         self.black = []
         self.inputs = []
@@ -88,8 +88,7 @@ class Grid:
             char = input[i]
             if char in self.word:
                 if char == self.word[i]:
-                    self.green.append(char)
-                    self.green_index.append(i)
+                    self.green[i] = char
                 else:
                     self.yellow.append(char)
                     self.yellow_index.append(i)
@@ -118,8 +117,7 @@ class Grid:
             char = input[i]
 
             if color == "correct":
-                self.green.append(char)
-                self.green_index.append(i)
+                self.green[i] = char
                 nb_correct += 1
                 
             if color == "present":
@@ -146,9 +144,9 @@ class Grid:
             else:
                 word = self.glist[random.randrange(0, len(self.glist))]
 
-            for j in range(0, len(self.green)):
-                (char, i) = (self.green[j], self.green_index[j])
-                if word[i] != char:
+            for j in range(0, self.size):
+                char = self.green[j]
+                if char != '' and word[j] != char:
                     good1 = False
                     break
             
