@@ -97,7 +97,7 @@ class Grid:
                     self.black.append(char)
 
     # * For when using website
-    #  Parses data from site html
+    #  Parses data from site DOM/shadow DOM
     #
     def web_input(self, input: str):
         # Submit input to the site and add a delay
