@@ -10,13 +10,13 @@ from selenium.webdriver.common.keys import Keys
 # Setting up geckowebdriver and loading webpage
 driver = webdriver.Firefox()  # change to webdriver.Chrome() to use with chrome/chromium
 shadow = Shadow(driver)
-driver.get("https://www.powerlanguage.co.uk/wordle/")
-time.sleep(1)
-keyboard = shadow.find_element("#keyboard")
+driver.get("https://www.nytimes.com/games/wordle/index.html")
+time.sleep(10)
+keyboard = shadow.find_element("[aria-label='Keyboard']")
 
 #* Close starting pop up
-close_button = shadow.find_element(".close-icon")
-close_button.click()
+#close_button = shadow.find_element(".close-icon")
+#close_button.click()
 
 f = open("wordlists/words_fetched.txt")
 word_list = f.readlines()  # Note that every word ends with \n, it is later stripped in get_dict()
@@ -110,9 +110,10 @@ class Grid:
         nb_correct = 0
 
         # Retrieve color data from current row from DOM and parse
+        row = shadow.find_element("[aria-label='Row "+str(self.try_nb)+"']")
+        tiles = shadow.get_child_elements(row)
         for i in range(0, self.size):
-            tile = shadow.find_element(By.CSS_SELECTOR, "game-row:nth-child("+str(
-                self.try_nb)+") > .row > game-tile:nth-child("+str(i+1)+") > .tile")
+            tile = shadow.get_child_elements(tiles[i])[0]
             color = tile.get_attribute("data-state")
             char = input[i]
 
@@ -140,7 +141,7 @@ class Grid:
             good1, good2, good3 = True, True, True
             
             if self.try_nb == 0 and self.size == 5:
-                word = "orate"
+                word = "adieu"
             else:
                 word = self.glist[random.randrange(0, len(self.glist))]
 
